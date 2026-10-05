@@ -1,0 +1,23 @@
+{
+  "allowed_extensions": [
+    "zip",
+    "pdf",
+    "txt",
+    "md",
+    "docx",
+    "doc",
+    "pptx",
+    "ppt",
+    "csv",
+    "png",
+    "jpg",
+    "jpeg",
+    "xlsx",
+    "xls"
+  ],
+  "max_file_size_mb": 50.0,
+  "max_zip_size_mb": 3000.0,
+  "recurse_zips": true,
+  "convert_unsupported": true,
+  "archive_prefix": "archive"
+}
