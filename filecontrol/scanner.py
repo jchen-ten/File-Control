@@ -17,6 +17,12 @@ from .longpath import long_path
 Logger = Callable[[str], None]
 MAX_FOLDER_DEPTH = 59
 
+# Placeholder / junk files: hidden files (".DS_Store", "._name" from macOS, ".gitkeep"...)
+# and Office temporary lock files ("~$name.docx") are rejected, as are files
+# of only a few bytes, which cannot hold real content.
+JUNK_NAME_PREFIXES = (".", "~$")
+MIN_FILE_SIZE = 10  # bytes; files strictly smaller are rejected
+
 
 @dataclass
 class FileEntry:
@@ -63,6 +69,14 @@ def _classify(path: Path, rel_path: PurePosixPath, config: Config) -> FileEntry:
     ext = path.suffix.lower().lstrip(".")
     reasons: list[str] = []
 
+    is_junk = False
+    if path.name.startswith(JUNK_NAME_PREFIXES):
+        is_junk = True
+        reasons.append("hidden or temporary file (name starts with '.' or '~$')")
+    if size < MIN_FILE_SIZE:
+        is_junk = True
+        reasons.append(f"file too small ({size} bytes < {MIN_FILE_SIZE} bytes)")
+
     allowed_exts = config.normalized_extensions
     format_ok = not allowed_exts or ext in allowed_exts
     if not format_ok:
@@ -77,7 +91,7 @@ def _classify(path: Path, rel_path: PurePosixPath, config: Config) -> FileEntry:
 
     # A conversion is only offered if the format is the only problem.
     convert_to = ""
-    if config.convert_unsupported and not format_ok and size_ok:
+    if config.convert_unsupported and not format_ok and size_ok and not is_junk:
         convert_to = target_for(ext, allowed_exts)
 
     return FileEntry(
