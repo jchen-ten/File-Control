@@ -1,9 +1,15 @@
 # File Control
 
-An application that checks a **folder** or a **zip**: it recursively scans every
-subfolder and nested archive, checks the **format** and **size** of each file,
-isolates the ones that break the rules, then compresses the rest into one or more
-zip archives.
+A versatile file management application with two main functions:
+
+1. **File Control** — checks a **folder** or a **zip**: it recursively scans every
+   subfolder and nested archive, checks the **format** and **size** of each file,
+   isolates the ones that break the rules, then compresses the rest into one or more
+   zip archives.
+
+2. **CSV Converter** — converts files between multiple formats:
+   - Convert **to CSV** from: Excel (.xlsx, .xls), JSON, Text/TSV, LibreOffice (.ods)
+   - Convert **from CSV** to: Excel (.xlsx), PDF
 
 ## How it works
 
@@ -47,8 +53,18 @@ executable — no Python or VS Code needed. See `dist\README.txt` for end-user n
 python main.py
 ```
 
+When launched, you'll see a **main menu** with two options:
+
+#### 1. File Control
 Select the input (folder or zip), adjust the settings if needed, then click
 **Start check**. After the analysis you are asked whether to create the archives.
+
+#### 2. CSV Converter
+Select a file to convert:
+- **Convert to CSV**: Choose any supported input file (Excel, JSON, Text, etc.) to convert to CSV
+- **Convert from CSV**: Choose a CSV file and select output format (Excel .xlsx or PDF)
+
+The converted file is created automatically next to the input file.
 
 ### Command line
 
@@ -58,6 +74,19 @@ python main.py "C:\path\to\input"
 
 The tool analyzes the input, lists the unsupported files, then asks for confirmation
 before creating the zip(s).
+
+## Requirements
+
+For the **CSV Converter** to work with all formats, install optional dependencies:
+
+```powershell
+pip install openpyxl reportlab
+```
+
+- **openpyxl**: Required for Excel (.xlsx) conversion support
+- **reportlab**: Required for PDF conversion support
+
+Without these, CSV Converter will show an error when attempting to use unsupported formats.
 
 ## Configuration (`config.json`)
 
